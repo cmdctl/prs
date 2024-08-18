@@ -106,6 +106,21 @@ https://dev.azure.com/yourorganization/yourproject/_git/yourrepo/pullrequest/123
 https://dev.azure.com/yourorganization/yourproject/_git/yourrepo/pullrequest/456
 ```
 
+### Using Comments in Input
+
+You can include comments in your input file by prefixing the comment lines with `--`. These lines will be ignored by the tool.
+
+#### Example
+
+Create a file `prs.txt` with PR links and comments:
+
+```
+-- This is a comment and will be ignored
+https://dev.azure.com/yourorganization/yourproject/_git/yourrepo/pullrequest/123
+-- Another comment
+https://dev.azure.com/yourorganization/yourproject/_git/yourrepo/pullrequest/456
+```
+
 ## Error Handling
 
 If the tool encounters an error while processing a PR, it will print an error message and continue to the next PR. Make sure to check the output for any errors that may occur during the execution.
