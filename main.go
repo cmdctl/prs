@@ -18,14 +18,17 @@ func main() {
 		os.Exit(1)
 	}
 	command := os.Args[1]
+	restOfArgs := os.Args[2:]
 	switch command {
-  case "--help", "-h":
-    printUsage()
+	case "--help", "-h":
+		printUsage()
 	case "complete":
-		completePRs()
+		completePRs(restOfArgs...)
 	case "abandon":
-		abandonPRs()
+
+		abandonPRs(restOfArgs...)
 	default:
+
 		printUsage()
 	}
 }
@@ -38,10 +41,18 @@ func extractIDfromLink(link string) string {
 	return id
 }
 
-func executeComplete(id string) error {
-	// command:
-	// az repos pr update --id 123 --status completed --squash --delete-source-branch --merge-strategy squash
-	cmd := exec.Command("az", "repos", "pr", "update", "--id", id, "--status", "completed", "--squash", "--delete-source-branch", "--merge-strategy", "squash")
+func executeComplete(id string, cliArgs ...string) error {
+	cmdList := []string{"repos", "pr", "update", "--id", id, "--status", "completed"}
+
+	if hasOption("--delete-source-branch", cliArgs) {
+		cmdList = append(cmdList, "--delete-source-branch")
+	}
+
+	if hasOption("--squash", cliArgs) {
+		cmdList = append(cmdList, "--squash")
+	}
+
+	cmd := exec.Command("az", cmdList...)
 	out, err := cmd.Output()
 	if err != nil {
 		fmt.Printf("[ERROR] could not execute command complete: %s\n", out)
@@ -50,10 +61,12 @@ func executeComplete(id string) error {
 	return nil
 }
 
-func executeAbandon(id string) error {
-	// command:
-	// az repos pr update --id <PR_ID> --status abandoned
-	cmd := exec.Command("az", "repos", "pr", "update", "--id", id, "--status", "abandoned")
+func executeAbandon(id string, cliArgs ...string) error {
+	cmdList := []string{"repos", "pr", "update", "--id", id, "--status", "abandoned"}
+	if hasOption("--delete-source-branch", cliArgs) {
+		cmdList = append(cmdList, "--delete-source-branch")
+	}
+	cmd := exec.Command("az", cmdList...)
 	out, err := cmd.Output()
 	if err != nil {
 		fmt.Printf("[ERROR] could not execute command abandon: %s\n", out)
@@ -81,10 +94,19 @@ func onPRs(handler PRHandler) {
 	}
 }
 
-func completePRs() {
+func hasOption(option string, options []string) bool {
+	for _, opt := range options {
+		if opt == option {
+			return true
+		}
+	}
+	return false
+}
+
+func completePRs(restOfArgs ...string) {
 	onPRs(func(id string) error {
 		fmt.Printf("complete PR: %s\n", id)
-		err := executeAbandon(id)
+		err := executeComplete(id, restOfArgs...)
 		if err != nil {
 			fmt.Printf("[ERROR] could not complete PR: %s error: %s", id, err)
 			return err
@@ -93,10 +115,10 @@ func completePRs() {
 	})
 }
 
-func abandonPRs() {
+func abandonPRs(restOfArgs ...string) {
 	onPRs(func(id string) error {
 		fmt.Printf("abandon PR: %s\n", id)
-		err := executeAbandon(id)
+		err := executeAbandon(id, restOfArgs...)
 		if err != nil {
 			fmt.Printf("[ERROR] could not abandon PR: %s error: %s", id, err)
 			return err
@@ -106,10 +128,23 @@ func abandonPRs() {
 }
 
 func printUsage() {
-	fmt.Println("---------------------------")
-	fmt.Println("USAGE: prs complete | abandon")
-	fmt.Println("Make sure to provide a list of PRs to STDIN - each link should be on a new line")
-  fmt.Println("EXAMPPLE 1: cat prs.txt | prs complete")
-  fmt.Println("EXAMPPLE 2: prs complete < prs.txt")
-	fmt.Println("---------------------------")
+	usage := `
+Usage:
+  prs [command] [options]
+
+Commands:
+  complete    Complete the specified pull requests
+  abandon     Abandon the specified pull requests
+
+Options:
+  --help, -h  Show this help message and exit
+
+Complete Command Options:
+  --delete-source-branch  Delete the source branch after completing the pull request
+  --squash                Squash the commits when completing the pull request
+
+Abandon Command Options:
+  --delete-source-branch  Delete the source branch after abandoning the pull request
+`
+	fmt.Println(usage)
 }

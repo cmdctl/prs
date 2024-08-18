@@ -40,8 +40,8 @@ The tool provides two main commands: `complete` and `abandon`. Each command requ
 To complete PRs, use the `complete` command. This command will:
 
 - Mark the PR as completed
-- Squash the commits
-- Delete the source branch
+- Squash the commits [OPTIONAL] (use `--squash` flag) default is `false`
+- Delete source branch [OPTIONAL] (use `--delete-source-branch` flag) default is `false`
 
 #### Example
 
@@ -95,6 +95,27 @@ To display the help message, use the `--help` or `-h` flag:
 
 ```sh
 prs --help
+
+```
+Outputs:
+```
+Usage:
+  prs [command] [options]
+
+Commands:
+  complete    Complete the specified pull requests
+  abandon     Abandon the specified pull requests
+
+Options:
+  --help, -h  Show this help message and exit
+
+Complete Command Options:
+  --delete-source-branch  Delete the source branch after completing the pull request
+  --squash                Squash the commits when completing the pull request
+
+Abandon Command Options:
+  --delete-source-branch  Delete the source branch after abandoning the pull request
+
 ```
 
 ## Input Structure
