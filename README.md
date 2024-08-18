@@ -1,6 +1,8 @@
 # PRS cli tool
 A handy tool to complete or abandon multiple PRs in azure devops at once.
-uses azure cli under the hood
+Uses azure cli under the hood.
+
+Collect your PR links in a file and pass that file to the tool
 
 INSTALLATION
 ```bash
