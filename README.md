@@ -16,7 +16,7 @@ To install this tool, you need to have Go installed on your machine. Follow thes
 
     ```sh
     git clone git@github.com/cmdctl/prs.git
-    cd prs-management-tool
+    cd prs
     ```
 
 2. Build the executable:
