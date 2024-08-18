@@ -25,10 +25,8 @@ func main() {
 	case "complete":
 		completePRs(restOfArgs...)
 	case "abandon":
-
 		abandonPRs(restOfArgs...)
 	default:
-
 		printUsage()
 	}
 }
