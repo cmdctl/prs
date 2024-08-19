@@ -32,10 +32,10 @@ func main() {
 }
 
 func extractIDfromLink(link string) string {
-	parts := strings.Split(link, "/")
+  uri := strings.Split(link, "?")[0]
+  parts := strings.Split(uri, "/")
 
 	id := parts[len(parts)-1]
-	id = strings.Split(id, "?")[0]
 	return id
 }
 
