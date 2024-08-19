@@ -31,6 +31,10 @@ To install this tool, you need to have Go installed on your machine. Follow thes
     mv prs /usr/local/bin/
     ```
 
+4. Configure azure cli to use default organization and project
+```sh
+az devops configure --defaults organization=https://dev.azure.com/contoso project=ContosoWebApp
+```
 ## Usage
 
 The tool provides two main commands: `complete` and `abandon`. Each command requires a list of PR links provided through STDIN.
