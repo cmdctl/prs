@@ -53,7 +53,7 @@ func executeComplete(id string, cliArgs ...string) error {
 	cmd := exec.Command("az", cmdList...)
 	out, err := cmd.Output()
 	if err != nil {
-		fmt.Printf("[ERROR] could not execute command complete: %s\n", out)
+    fmt.Printf("[ERROR] could not execute command complete: %s error: %s\n", out, err)
 		return err
 	}
 	return nil
